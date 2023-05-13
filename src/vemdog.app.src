@@ -1,0 +1,14 @@
+{application, vemdog, [
+    {description, "Vem Dog (who died?) VM trace visualizer"},
+    {vsn, "0.1"},
+    {registered, []},
+    {applications, [kernel, stdlib]},
+    {mod, {vemdog_app, []}},
+    {env, [
+        %% Listen here, you little webserver
+        {host, "127.0.0.1"},
+        %% set this to 0 for automatic (random available) port assignment. You can learn the randomly assigned port from
+        %% application:get_env(vemdog, port) after vemdog is started
+        {port, 1999}
+    ]}
+]}.
