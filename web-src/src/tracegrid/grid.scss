@@ -1,0 +1,21 @@
+.grid {
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+}
+
+.item {
+  flex-basis: 100pt; /* Adjust as needed */
+  min-height: 10pt; /* Adjust as needed */
+  border: 1px solid silver;
+  box-sizing: border-box;
+  color: black;
+  font-size: 8pt;
+}
+
+.hidden::before {
+  content: "hidden";
+}
+.hidden {
+  color: silver;
+}

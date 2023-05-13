@@ -13,7 +13,7 @@
     %% Unique timestamp suitable for being a key
     timestamp,
     type :: atom(),
-    pidport :: pid() | port(),
+    pid :: pid() | port(),
     args = [] :: list()
 }).
 %% gen_server state (empty)
@@ -48,30 +48,30 @@ mfa_to_str({M, F, Arity}) -> iolist_to_binary(io_lib:format("~s:~s/~p", [M, F, A
 ev_to_record({trace_ts, PidPort, Send, Msg, To, Timestamp}) when
     Send =:= send; Send =:= send_to_non_existing_process
 ->
-    #ev{timestamp = Timestamp, type = Send, pidport = to_str(PidPort), args = [to_str(Msg), To]};
+    #ev{timestamp = Timestamp, type = Send, pid = to_str(PidPort), args = [to_str(Msg), To]};
 ev_to_record({trace_ts, PidPort, 'receive', Msg, Timestamp}) ->
     %% TODO: Convert Msg to string/binary and trim length? Optionally?
-    #ev{timestamp = Timestamp, type = 'receive', pidport = to_str(PidPort), args = [to_str(Msg)]};
+    #ev{timestamp = Timestamp, type = 'receive', pid = to_str(PidPort), args = [to_str(Msg)]};
 ev_to_record({trace_ts, PidPort, Sched, MFA, Timestamp}) when
     Sched =:= in; Sched =:= in_exiting; Sched =:= out; Sched =:= out_exiting; Sched =:= out_exited
 ->
-    #ev{timestamp = Timestamp, type = Sched, pidport = to_str(PidPort), args = [mfa_to_str(MFA)]};
+    #ev{timestamp = Timestamp, type = Sched, pid = to_str(PidPort), args = [mfa_to_str(MFA)]};
 ev_to_record({trace_ts, PidPort, exit, Reason, Timestamp}) ->
-    #ev{timestamp = Timestamp, type = exit, pidport = to_str(PidPort), args = [to_str(Reason)]};
+    #ev{timestamp = Timestamp, type = exit, pid = to_str(PidPort), args = [to_str(Reason)]};
 ev_to_record({trace_ts, PidPort, Spawn, Pid2, MFA, Timestamp}) when
     Spawn =:= spawn; Spawn =:= spawned
 ->
-    #ev{timestamp = Timestamp, type = Spawn, pidport = to_str(PidPort), args = [to_str(Pid2), mfa_to_str(MFA)]};
+    #ev{timestamp = Timestamp, type = Spawn, pid = to_str(PidPort), args = [to_str(Pid2), mfa_to_str(MFA)]};
 ev_to_record({trace_ts, PidPort, Link, Pid2, Timestamp}) when
     Link =:= link; Link =:= unlink; Link =:= getting_linked; Link =:= getting_unlinked
 ->
-    #ev{timestamp = Timestamp, type = Link, pidport = to_str(PidPort), args = [to_str(Pid2)]};
+    #ev{timestamp = Timestamp, type = Link, pid = to_str(PidPort), args = [to_str(Pid2)]};
 ev_to_record({trace_ts, PidPort, GC, _Params, Timestamp}) when
     GC =:= gc_minor_start; GC =:= gc_minor_end; GC =:= gc_major_start; GC =:= gc_major_end
 ->
-    #ev{timestamp = Timestamp, type = GC, pidport = to_str(PidPort), args = []};
+    #ev{timestamp = Timestamp, type = GC, pid = to_str(PidPort), args = []};
 ev_to_record({trace_ts, PidPort, register, Name, Timestamp}) ->
-    #ev{timestamp = Timestamp, type = register, pidport = to_str(PidPort), args = [to_str(Name)]};
+    #ev{timestamp = Timestamp, type = register, pid = to_str(PidPort), args = [to_str(Name)]};
 ev_to_record(Other) ->
     io:format(standard_error, "Unrecognized pattern in call ev_to_record(~p)~n", [Other]),
     #ev{timestamp = element(tuple_size(Other), Other), type = failed, args = Other}.
