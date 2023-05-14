@@ -1,6 +1,6 @@
 .grid {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   width: 100%;
 }
 
@@ -11,11 +11,23 @@
   box-sizing: border-box;
   color: black;
   font-size: 8pt;
+  padding: 1pt;
 }
 
-.hidden::before {
-  content: "hidden";
+.rowHeader {
+  background: #eee;
+  font-weight: bold;
 }
+
 .hidden {
-  color: silver;
+  color: grey;
+}
+
+.gridUi {
+  font-size: 6pt;
+}
+
+button.gridUi {
+  border: 1px solid grey;
+  background: silver;
 }

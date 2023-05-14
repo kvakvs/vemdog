@@ -34,7 +34,7 @@ start() ->
 %% Start tracing all new processes, and all processes spawned after that, and all newly linked processes too
 t() ->
     %% trace/1 shadowed by erlang:trace/1
-    ?MODULE:trace(new).
+    ?MODULE:t(new).
 
 %% @param Spec goes to erlang:trace directly, use new or new_processes or new_ports to trace only new, for example
 -spec t(Spec :: pid_port_spec()) -> any().
@@ -44,11 +44,11 @@ t(Spec) ->
 
 -spec t(Spec :: pid_port_spec(), Opts :: [vemdog_trace_opt()]) -> any().
 t(Spec, Opts) ->
-    stop(),
+    stop_internal(),
     vemdog_store:reset(),
     trace_internal(Spec, true, Opts),
     StopTime = 10,
-    timer:apply_after(StopTime, ?MODULE, stop_trace, []),
+    timer:apply_after(timer:seconds(StopTime), ?MODULE, stop, []),
     io:format(
         "[vemdog] Starting trace for spec=~p; Stop after ~p sec or call vemdog:stop_trace().~n", [
             Spec, StopTime
@@ -107,9 +107,13 @@ trace_internal(Spec, Enable, Opts) ->
         ] ++ MaybeGc ++ MaybeScheduler,
     erlang:trace(Spec, Enable, FlagList).
 
-%% Does not stop the application, only stops tracing.
+%% Does not stop the application, only stops tracing. Prints.
 stop() ->
-    %% Stop all tracing with all options
-    trace_internal(all, false, [gc, scheduler]),
+    stop_internal(),
     io:format("~n[vemdog] Tracing stopped.~n"),
     vemdog_app:print_web_server_info().
+
+%% Stop but no printing
+stop_internal() ->
+    %% Stop all tracing with all options
+    trace_internal(all, false, [gc, scheduler]).
