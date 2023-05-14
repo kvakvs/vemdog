@@ -1,16 +1,28 @@
 import {StringSet, TraceEv} from "./TraceGrid";
 
+const TRIM_LENGTH = 50;
+
+const dquote = (s: string): string => {
+  const trimmed = s.substring(0, TRIM_LENGTH) + (s.length > TRIM_LENGTH ? "…" : "");
+  return trimmed.replace("\"", "\\\"");
+}
+
 export const buildFromEvents = (data: TraceEv[], shownPids: StringSet) => {
   let events: string[] = [];
 
   const evSend = (ev: TraceEv) => {
     // send args[0] is message, args[1] is destination pid
-    const toPid = ev.args[1];
+    const [msg, toPid] = ev.args;
     if (shownPids.has(toPid)) {
-      events.push(`${ev.pid} -> ${toPid} : send`)
+      events.push(`${ev.pid} -> ${toPid} : "send\n${dquote(msg)}"`)
     } else {
-      events.push(`${ev.pid} -> * : send to ${toPid}`)
+      events.push(`${ev.pid} -> * : "send to ${toPid}\n${dquote(msg)}"`)
     }
+  }
+  const evReceive = (ev: TraceEv) => {
+    // receive does not show the sender
+    const msg = ev.args[0];
+    events.push(`* --> ${ev.pid} : "receive\n${dquote(msg)}"`)
   }
   const evSendNex = (ev: TraceEv) => {
     // send args[0] is message, args[1] is destination pid
@@ -64,8 +76,7 @@ export const buildFromEvents = (data: TraceEv[], shownPids: StringSet) => {
     } else if (ev.type === "send_to_non_existing_process") {
       evSendNex(ev)
     } else if (ev.type === "receive") {
-      // receive does not show the sender
-      events.push(`* --> ${ev.pid} : receive`)
+      evReceive(ev)
     } else if (ev.type === "link") {
       evLink(ev)
     } else if (ev.type === "getting_unlinked" || ev.type === "spawned") {
