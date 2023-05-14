@@ -25,8 +25,7 @@ const getUniquePids = (data: TraceEv[]): StringSet => {
 
 function PageHeader() {
   return (<header className="header">
-    <small>Vem dog? (Who died?) Erlang trace data explorer.
-      <a href="https://github.com/kvakvs/vemdog">Github</a>.</small>
+    <small>Vem dog? (Who died?) Erlang trace data explorer. <a href="https://github.com/kvakvs/vemdog">Visit Github</a>.</small>
   </header>);
 }
 

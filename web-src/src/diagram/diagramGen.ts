@@ -66,6 +66,10 @@ export const buildFromEvents = (data: TraceEv[], shownPids: StringSet) => {
     events.push(`end ${ev.pid}`)
   }
 
+  const evGc = (ev: TraceEv) => {
+    events.push(`note over ${ev.pid}: ${ev.type}`)
+  }
+
   data.forEach((ev) => {
     if (!shownPids.has(ev.pid)) {
       return events;
@@ -91,6 +95,8 @@ export const buildFromEvents = (data: TraceEv[], shownPids: StringSet) => {
       events.push(`note over ${ev.pid}: register ${ev.args[0]}`)
     } else if (ev.type === "unregister") {
       events.push(`note over ${ev.pid}: unregister ${ev.args[0]}`)
+    } else if (ev.type.startsWith("gc_")) {
+      evGc(ev)
     } else {
       console.log("unhandled event", ev);
     }

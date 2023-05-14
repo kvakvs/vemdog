@@ -29,8 +29,7 @@
 * Vemdog will invoke `vemdog:stop()` after a 10 second timer.
 
 * `vemdog:stop()` will immediately stop tracing but all collected events will wait in the ETS storage to be
-  visualized. Go to your web browser, and open localhost:1999 (or whatever port you configured in the vemdog application
-  env).
+  visualized.
 
 ## Browsing
 

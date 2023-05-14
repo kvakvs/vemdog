@@ -1,10 +1,16 @@
+$dark: #1B2023;
+$medium-dark: #80949D;
+$light: #D8E4FF;
+$highlight: #E54F6D;
+$marker-yellow: #FBE59D;
+
 .App {
   text-align: center;
 }
 
 .header {
   white-space: nowrap;
-  background-color: #282c34;
+  background-color: $dark;
   min-height: 3vh;
   display: flex;
   flex-direction: column;
@@ -12,6 +18,10 @@
   justify-content: center;
   font-size: 8pt;
   color: white;
+}
+
+.header a {
+  color: $highlight;
 }
 
 .App-link {

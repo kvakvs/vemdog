@@ -5,7 +5,7 @@
 }
 
 .item {
-  min-width: 10pt; /* Adjust as needed */
+  min-width: 40pt; /* Adjust as needed */
   min-height: 10pt; /* Adjust as needed */
   border: 1px solid silver;
   box-sizing: border-box;
@@ -14,10 +14,10 @@
   padding: 1pt;
 }
 
-.noItem {
-  min-width: 100pt; /* Adjust as needed */
-  min-height: 10pt; /* Adjust as needed */
-}
+//.noItem {
+//  min-width: 40pt; /* Adjust as needed */
+//  min-height: 10pt; /* Adjust as needed */
+//}
 
 .rowHeader {
   background: #eee;
