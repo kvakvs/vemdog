@@ -1,5 +1,7 @@
-import {FC, useMemo, useState} from "react";
+import React, {FC, useMemo, useState} from "react";
 import "./grid.scss";
+import {TraceGridRow} from "./TraceGridRow";
+import {TraceGridTopRow} from "./TraceGridTopRow";
 
 export interface TraceEv {
   timestamp: string;
@@ -12,8 +14,9 @@ interface TraceGridProps {
   data: TraceEv[]
 }
 
-type TraceObjectsSet = Set<string>
-type TraceDict = { [key: string]: TraceEv[] }
+export type TraceObjectsSet = Set<string>
+export type TraceEvOrNull = TraceEv | null;
+export type TraceDict = { [key: string]: TraceEvOrNull[] }
 
 const getUniquePids = (data: TraceEv[]): TraceObjectsSet => {
   return data.reduce((accum, d) => {
@@ -23,8 +26,8 @@ const getUniquePids = (data: TraceEv[]): TraceObjectsSet => {
 }
 
 export const TraceGrid: FC<TraceGridProps> = ({data}) => {
-  const [shownPids, setShownPids] = useState<TraceObjectsSet>(new Set());
-  const [hiddenPids, setHiddenPids] = useState<TraceObjectsSet>(getUniquePids(data));
+  const [shownPids, setShownPids] = useState<TraceObjectsSet>(getUniquePids(data));
+  const [hiddenPids, setHiddenPids] = useState<TraceObjectsSet>(new Set());
 
   // Shown and hidden sets of pid are combined into all pids
   const allPids = useMemo<string[]>(() => {
@@ -35,49 +38,53 @@ export const TraceGrid: FC<TraceGridProps> = ({data}) => {
 
   // Long input data list is split by pids into lists of events per pid
   const groupedByPid = useMemo<TraceDict>(() => {
+    // Initialize all cells for each existing pid with empty lists
+    const initial = allPids.reduce(
+        (accum, p) => {
+          accum[p] = [];
+          return accum;
+        }, {} as TraceDict
+    )
+
+    // Sort events one per pid, and fill other pids in each row with empties
     return data.reduce((accum, ev) => {
-      if (accum[ev.pid]) {
-        accum[ev.pid].push(ev);
-      } else {
-        accum[ev.pid] = [ev];
-      }
+      accum[ev.pid].push(ev);
+      // update all other pids with empties
+      allPids.forEach((p) => {
+        if (p !== ev.pid) {
+          accum[p].push(null);
+        }
+      })
       return accum;
-    }, {} as TraceDict);
-  }, [data]);
+    }, initial);
+  }, [data, allPids]);
 
-  const headerCell = (pid: string) => {
-    if (shownPids.has(pid)) {
-      return <div className="item rowHeader">{pid}</div>;
-    } else {
-      return <div className="item rowHeader hidden">{pid}
-        <button className="gridUi">Show</button>
-      </div>;
-    }
+  const showPid = (pid: string) => {
+    setShownPids((s) => {
+      s.add(pid);
+      return s;
+    })
+    setHiddenPids((h) => {
+      h.delete(pid);
+      return h;
+    })
+    console.log("show", pid);
   }
 
-  // Display top row of header cells
-  const topRow = () => {
-    return <div className="grid">
-      <div className="item">↓ Timeline</div>
-      {allPids.map(headerCell)}
-    </div>;
-  }
-
-  // From a dictionary of data streams grouped by pid, pick only shown items
-  // For all shown items try slice streams by timestamp
-  const populateRows = () => {
-    // Contains position in each pid's stream
-    const lastIndex = Array.from(shownPids).map(() => 0);
-    // Contains last timestamp in each pid's stream
-    const lastTimestamp = Array.from(shownPids).map((p) => {
-      // Since pid exists in allPids, it has at least one event so we can safely take first event
-      return groupedByPid[p][0].timestamp;
-    });
-    return
+  const hidePid = (pid: string) => {
+    setHiddenPids((h) => {
+      h.add(pid);
+      return h;
+    })
+    setShownPids((s) => {
+      s.delete(pid);
+      return s;
+    })
+    console.log("hide", pid);
   }
 
   return (<>
-    {topRow()}
-    {populateRows()}
+    <TraceGridTopRow hidePid={hidePid} showPid={showPid} shownPids={shownPids} hiddenPids={hiddenPids}/>
+    {data.map((_, i) => <TraceGridRow groupedByPid={groupedByPid} shownPids={shownPids} rowIndex={i}/>)}
   </>);
 }

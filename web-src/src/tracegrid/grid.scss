@@ -5,7 +5,7 @@
 }
 
 .item {
-  flex-basis: 100pt; /* Adjust as needed */
+  min-width: 100pt; /* Adjust as needed */
   min-height: 10pt; /* Adjust as needed */
   border: 1px solid silver;
   box-sizing: border-box;
