@@ -18,7 +18,7 @@ export const SVGDiagram = ({data, shownPids}) => {
                              initialPositionX={0}
                              initialPositionY={0}>
         <TransformComponent>
-            <div style={{width: "100vw", height: "100%"}} ref={diagramContainerRef}/>
+            <div style={{width: "100vw", height: "100vh"}} ref={diagramContainerRef}/>
         </TransformComponent>
     </TransformWrapper>
 }

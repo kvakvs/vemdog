@@ -21,7 +21,7 @@ export const TraceGridTopRow: FC<TraceGridTopRowProps> = ({shownPids, hiddenPids
   }
 
   const hiddenHeaderCell = (pid: string, i: number) => {
-    return <div className="item rowHeader hidden" key={`hiddenHeader${i}`}>
+    return <div className="item rowHeader" key={`hiddenHeader${i}`}>
       <button className="uiShow" onClick={() => showPid(pid)}>{trimPid(pid)}</button>
     </div>;
   }

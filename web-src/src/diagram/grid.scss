@@ -1,3 +1,5 @@
+@import "../variables.scss";
+
 .grid {
   display: flex;
   flex-wrap: nowrap;
@@ -20,24 +22,23 @@
 //}
 
 .rowHeader {
-  background: #eee;
+  background: $medium-dark;
   font-weight: bold;
 }
 
-.hidden {
-  min-width: 40pt; // Make hidden row header cells shorter
-  color: grey;
-  font-size: 6pt;
-}
+//.hidden {
+//  min-width: 40pt; // Make hidden row header cells shorter
+//  color: grey;
+//  font-size: 6pt;
+//}
 
 button.uiShow {
   font-size: 6pt;
-  border: 1px solid grey;
-  background: green;
-  color: white;
+  border: none;
+  background: $marker-yellow;
 }
 button.uiShow:hover {
-  background: coral;
+  background: $marker-red;
 }
 button.uiShow:hover::before {
   content: "show "
@@ -45,11 +46,11 @@ button.uiShow:hover::before {
 
 button.uiHide {
   font-size: 6pt;
-  border: 1px solid grey;
-  background: lightyellow;
+  border: none;
+  background: $marker-red;
 }
 button.uiHide:hover {
-  background: coral;
+  background: $marker-yellow;
 }
 button.uiHide:hover::before {
   content: "hide "
