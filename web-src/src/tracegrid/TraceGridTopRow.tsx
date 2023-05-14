@@ -1,24 +1,23 @@
 import {FC} from "react";
-import {TraceObjectsSet} from "./TraceGrid";
 import "./grid.scss";
 
 interface TraceGridTopRowProps {
   showPid: (p: string) => void;
   hidePid: (p: string) => void;
-  shownPids: TraceObjectsSet;
-  hiddenPids: TraceObjectsSet;
+  shownPids: string[];
+  hiddenPids: string[];
 }
 
 
 export const TraceGridTopRow: FC<TraceGridTopRowProps> = ({shownPids, hiddenPids, showPid, hidePid}) => {
-  const shownHeaderCell = (pid: string) => {
-    return <div className="item rowHeader">{pid}
+  const shownHeaderCell = (pid: string, i: number) => {
+    return <div className="item rowHeader" key={`header${i}`}>{pid}
       <button className="gridUi" onClick={() => hidePid(pid)}>-</button>
     </div>;
   }
 
-  const hiddenHeaderCell = (pid: string) => {
-    return <div className="item rowHeader hidden">{pid}
+  const hiddenHeaderCell = (pid: string, i: number) => {
+    return <div className="item rowHeader hidden" key={`hiddenHeader${i}`}>{pid}
       <button className="gridUi" onClick={() => showPid(pid)}>+</button>
     </div>;
   }

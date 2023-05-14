@@ -14,13 +14,20 @@
   padding: 1pt;
 }
 
+.noItem {
+  min-width: 100pt; /* Adjust as needed */
+  min-height: 10pt; /* Adjust as needed */
+}
+
 .rowHeader {
   background: #eee;
   font-weight: bold;
 }
 
 .hidden {
+  min-width: 40pt; // Make hidden row header cells shorter
   color: grey;
+  font-size: 6pt;
 }
 
 .gridUi {
@@ -30,4 +37,7 @@
 button.gridUi {
   border: 1px solid grey;
   background: silver;
+}
+button.gridUi:hover {
+  background: coral;
 }
