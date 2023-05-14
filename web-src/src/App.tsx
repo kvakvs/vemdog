@@ -7,7 +7,10 @@ import {SVGDiagram} from "./diagram/SVGDiagram";
 const fromBackend = (parsed: any): TraceEv[] => {
   if (Array.isArray(parsed)) {
     return parsed.map((row): TraceEv => {
-      return {timestamp: row.t, pid: row.p, type: row.ty, args: row.a}
+      return {
+        // timestamp: row.t,
+        pid: row.p, type: row.ty, args: row.a
+      }
     });
   }
   return [];
@@ -18,6 +21,13 @@ const getUniquePids = (data: TraceEv[]): StringSet => {
     accum.add(d.pid);
     return accum;
   }, new Set<string>());
+}
+
+function PageHeader() {
+  return (<header className="header">
+    <small>Vem dog? (Who died?) Erlang trace data explorer.
+      <a href="https://github.com/kvakvs/vemdog">Github</a>.</small>
+  </header>);
 }
 
 function App() {
@@ -31,9 +41,7 @@ function App() {
 
   return (
       <div className="App">
-        <header className="header">
-          <small>Vem dog? (Who died?) Erlang trace data explorer.</small>
-        </header>
+        <PageHeader/>
         <TraceGrid {...{shownPids, setShownPids, hiddenPids, setHiddenPids}}/>
         <SVGDiagram {...{data: data1, shownPids}} />
       </div>

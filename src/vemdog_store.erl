@@ -33,8 +33,8 @@ init([]) ->
 reset() ->
     ets:delete_all_objects(?ETS_TAB).
 
-prepare_row_to_json(#ev{timestamp = Ts, pid = P, type = Ty, args = A}) ->
-    #{t => Ts, p => P, ty => Ty, a => A}.
+prepare_row_to_json(#ev{timestamp = _Ts, pid = P, type = Ty, args = A}) ->
+    #{p => P, ty => Ty, a => A}.
 
 handle_call(to_json, _From, State) ->
     Rows = lists:map(fun prepare_row_to_json/1, ets:tab2list(?ETS_TAB)),

@@ -17,9 +17,9 @@
     | new_processes
     | new_ports.
 %% If present in options, will invoke erlang:trace_pattern instead of erlang:trace
-% -type trace_pattern() :: {module(), atom(), non_neg_integer() | '_'}.
+%%-type trace_pattern() :: {module(), atom(), non_neg_integer() | '_'}.
 -type vemdog_trace_opt() :: gc | scheduler.
-% | {pattern, trace_pattern()}.
+% | {tp, trace_pattern()}.
 
 %% Called manually by the user
 start() ->
@@ -55,8 +55,7 @@ t(Spec, Opts) ->
         ]
     ).
 
--spec trace_internal(Spec :: pid_port_spec(), Enable :: boolean(), Opts :: [vemdog_trace_opt()]) ->
-    any().
+-spec trace_internal(Spec :: pid_port_spec(), Enable :: boolean(), Opts :: [vemdog_trace_opt()]) -> any().
 trace_internal(Spec, Enable, Opts) ->
     MaybeGc =
         case lists:member(gc, Opts) of
@@ -115,5 +114,6 @@ stop() ->
 
 %% Stop but no printing
 stop_internal() ->
-    %% Stop all tracing with all options
+    %% Clear all tracing patterns. Stop all tracing with all options.
+    dbg:ctp(),
     trace_internal(all, false, [gc, scheduler]).
