@@ -8,6 +8,10 @@
 4. Has no external dependencies, single self-contained Erlang application to be dropped into your source tree
    for investigation.
 
+## Early Prototype Pics
+
+![Pic1](https://github.com/kvakvs/vemdog/assets/288724/51f01bdb-8084-4bfc-8c56-dfa7fb033800)
+
 ## Starting
 
 * `vemdog:start()` to start the app, including web server and a simple storage module which will receive the events.
