@@ -55,7 +55,8 @@ t(Spec, Opts) ->
         ]
     ).
 
--spec trace_internal(Spec :: pid_port_spec(), Enable :: boolean(), Opts :: [vemdog_trace_opt()]) -> any().
+-spec trace_internal(Spec :: pid_port_spec(), Enable :: boolean(), Opts :: [vemdog_trace_opt()]) ->
+    any().
 trace_internal(Spec, Enable, Opts) ->
     MaybeGc =
         case lists:member(gc, Opts) of
@@ -97,7 +98,7 @@ trace_internal(Spec, Enable, Opts) ->
             %% Process-related: spawn, spawned, exit, register, unregister, link, unlink, getting_linked, and getting_unlinked.
             procs,
             %% Trace using monotonic timestamp makes it unique and good to be a key in trace store ETS table
-            strict_monotonic_timestamp,
+            monotonic_timestamp,
             %% Makes any process created by a traced process inherit its trace flags, including flag set_on_spawn.
             set_on_spawn,
             %% Makes any process linked by a traced process inherit its trace flags, including flag set_on_link.
@@ -109,7 +110,9 @@ trace_internal(Spec, Enable, Opts) ->
 %% Does not stop the application, only stops tracing. Prints.
 stop() ->
     stop_internal(),
-    io:format("~n[vemdog] Tracing stopped.~n"),
+    io:format("~n[vemdog] Tracing stopped. Running summarize task over the trace data...~n"),
+    vemdog_store:summarize(),
+    io:format("~n[vemdog] Done.~n"),
     vemdog_app:print_web_server_info().
 
 %% Stop but no printing

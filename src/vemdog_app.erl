@@ -25,13 +25,14 @@ start_web() ->
     Options = [
         {modules, [mod_esi, mod_get]},
         {port, ConfiguredPort},
-        {server_name, "Vemdog"},
+        {server_name, "Vem dog"},
         {server_root, SrvRoot},
         {document_root, DocRoot},
         {bind_address, ParsedHost},
 
         %% Backend calls from the webpage go here
-        {erl_script_alias, {"/vemdog", [vemdog_esi, io]}},
+        {erl_script_alias, {"/vemdog", [vemdog_esi]}},
+        {erl_script_nocache, true},
 
         {mime_types, [
             {"html", "text/html"}, {"css", "text/css"}, {"js", "application/x-javascript"}
